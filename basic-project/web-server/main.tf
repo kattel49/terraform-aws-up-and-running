@@ -40,8 +40,21 @@ resource "aws_security_group_rule" "allow_outbound_traffic" {
   security_group_id = "${aws_security_group.allow_ssh.id}"
 }
 
+resource "aws_security_group" "allow_jenkins" {
+  name = "allow_jenkins"
+}
+
+resource "aws_security_group_rule" "allow_jenkins" {
+  type = "ingress"
+  from_port = 8080
+  to_port = 8080
+  cidr_blocks = ["0.0.0.0/0"]
+  protocol = "tcp"
+  security_group_id = "${aws_security_group.allow_jenkins.id}"
+}
+
 resource "aws_security_group" "allow_http" {
-  name = "allow_http"  
+  name = "allow_http"
 }
 
 resource "aws_security_group_rule" "allow_http" {
@@ -71,7 +84,7 @@ resource "aws_instance" "jenkins-server" {
   tags = {
     Name = "${var.jenkins_server_name}"
   }
-  vpc_security_group_ids = ["${aws_security_group.allow_ssh.id}"]
+  vpc_security_group_ids = ["${aws_security_group.allow_ssh.id}", "${aws_security_group.allow_jenkins.id}"]
 }
 #ip address of the web server
 output "web_ip" {

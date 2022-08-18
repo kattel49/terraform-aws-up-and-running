@@ -1,5 +1,5 @@
 [webservers]
-52.59.237.118 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/projects.pem
+18.196.226.68 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/projects.pem
 
 [jenkins]
-3.73.1.182 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/projects.pem
+18.194.113.97 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/projects.pem
