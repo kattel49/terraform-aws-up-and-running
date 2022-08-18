@@ -30,6 +30,15 @@ resource "aws_security_group_rule" "allow_ssh" {
   security_group_id = "${aws_security_group.allow_ssh.id}"
   protocol = "tcp"
 }
+#egress rule for the instance to connect to the internet
+resource "aws_security_group_rule" "allow_outbound_traffic" {
+  type = "egress"
+  from_port = 0
+  to_port = 65535
+  cidr_blocks = ["0.0.0.0/0"]
+  protocol = "-1"
+  security_group_id = "${aws_security_group.allow_ssh.id}"
+}
 
 resource "aws_security_group" "allow_http" {
   name = "allow_http"  

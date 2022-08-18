@@ -4,11 +4,9 @@
   hosts: jenkins
   tasks:
     - name : Install Java
-      apt:
-        update_cache: yes
-        name: default-jdk
-      #sudo privelege
-      become: yes
+      shell: |
+        sudo apt update -y
+        sudo apt install openjdk-11-jre -y
     
     - name : Install Jenkins
     # | refers to multiline commands
