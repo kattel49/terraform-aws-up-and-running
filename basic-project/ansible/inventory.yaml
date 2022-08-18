@@ -1,0 +1,5 @@
+[webservers]
+ubuntu@ip ansible_ssh_private_key_file=~./ssh/projects.pem
+
+[jenkins]
+ubuntu@ip ansible_ssh_private_key_file=~./ssh/projects.pem
