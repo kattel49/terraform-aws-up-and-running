@@ -30,6 +30,20 @@ resource "aws_security_group_rule" "allow_ssh" {
   security_group_id = "${aws_security_group.allow_ssh.id}"
   protocol = "tcp"
 }
+
+resource "aws_security_group" "allow_http" {
+  name = "allow_http"  
+}
+
+resource "aws_security_group_rule" "allow_http" {
+  type = "ingress"
+  from_port = 80
+  to_port = 80
+  cidr_blocks = ["0.0.0.0/0"]
+  protocol = "tcp"
+  security_group_id = "${aws_security_group.allow_http.id}"
+}
+
 #web-server instance
 resource "aws_instance" "web-server" {
     instance_type = "t2.micro"
@@ -38,7 +52,7 @@ resource "aws_instance" "web-server" {
     tags = {
       "Name" = "${var.web_server_name}"
     }
-    vpc_security_group_ids = ["${aws_security_group.allow_ssh.id}"]
+    vpc_security_group_ids = ["${aws_security_group.allow_ssh.id}", "${aws_security_group.allow_http.id}"]
 }
 #jenkins-server instance
 resource "aws_instance" "jenkins-server" {
