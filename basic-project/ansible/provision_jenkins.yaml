@@ -1,0 +1,26 @@
+---
+
+- name: Jenkins Playbook
+  hosts: jenkins
+  tasks:
+    - name : Install Java
+      apt:
+        update_cache: yes
+        name: default-jdk
+      #sudo privelege
+      become: yes
+    
+    - name : Install Jenkins
+    # | refers to multiline commands
+      shell : |
+        curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee \
+          /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+        echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+          https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+          /etc/apt/sources.list.d/jenkins.list > /dev/null
+        sudo apt-get update -y
+        sudo apt-get install jenkins -y
+
+    - name: Run jenkins
+      shell: /etc/init.d/jenkins start
+      become: yes
