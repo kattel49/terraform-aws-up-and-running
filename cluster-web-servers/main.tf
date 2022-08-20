@@ -63,6 +63,7 @@ resource "aws_launch_configuration" "web_server_configuration" {
                 #!/bin/bash
                 apt update -y
                 apt install apache2 -y
+                echo "<h1>Hello World! from $HOSTNAME</h1>" > /var/www/html/index.html
                 systemctl restart apache2
                 EOF
     lifecycle {
@@ -81,4 +82,33 @@ resource "aws_autoscaling_group" "server_autoscale_group" {
       create_before_destroy = true
     }
     availability_zones = "${data.aws_availability_zones.all_zones.names}"
+    #load_balancers = ["${aws_elb.web_server_lb.id}"] does not work
+}
+
+resource "aws_autoscaling_attachment" "elb_attachment" {
+    autoscaling_group_name = "${aws_autoscaling_group.server_autoscale_group.id}"
+    elb = "${aws_elb.web_server_lb.id}"
+}
+
+resource "aws_elb" "web_server_lb" {
+    name = "${var.lb_web_server}"
+    availability_zones = "${data.aws_availability_zones.all_zones.names}"
+    security_groups = ["${aws_security_group.config_sec_group.id}"]
+    listener {
+      instance_port = 80
+      instance_protocol = "http"
+      lb_port = 80
+      lb_protocol = "http"
+    }
+
+    health_check {
+      healthy_threshold = "${var.asg_healthy_thresh}"
+      unhealthy_threshold = "${var.asg_unhealthy_thresh}"
+      timeout = 3
+      target = "HTTP:80/"
+      interval = 30
+    }
+    lifecycle {
+        create_before_destroy = true
+    }
 }

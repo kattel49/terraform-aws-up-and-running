@@ -31,11 +31,26 @@ variable "web_server_asg_name" {
 }
 
 variable "asg_min_size" {
-  default = "2"
+  default = 2
   description = "Minimum number of launch instances"
 }
 
 variable "asg_max_size" {
-  default = "3"
+  default = 3
   description = "Maximum number of launch instances"
+}
+
+variable "lb_web_server"{
+  default = "lb-web-server"
+  description = "Name of the load balancer"
+}
+
+variable "asg_healthy_thresh" {
+  default = 2
+  description = "Number of healthy instances required in the asg"
+}
+
+variable "asg_unhealthy_thresh" {
+  default = 2
+  description = "Tolerable number of unhealthy instances"
 }
