@@ -70,6 +70,8 @@ resource "aws_launch_configuration" "web_server_configuration" {
     }
 }
 
+data "aws_availability_zones" "all_zones" {}
+
 resource "aws_autoscaling_group" "server_autoscale_group" {
     name = "${var.web_server_asg_name}"
     launch_configuration = "${aws_launch_configuration.web_server_configuration.name}"
@@ -78,4 +80,5 @@ resource "aws_autoscaling_group" "server_autoscale_group" {
     lifecycle {
       create_before_destroy = true
     }
+    availability_zones = "${data.aws_availability_zones.all_zones.names}"
 }
